@@ -1,0 +1,28 @@
+name: Go Format and DependencyCheck
+on: [ push ]
+
+jobs:
+  build:
+    name: Format and DependencyCheck
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: stable
+      - name: Go Tidy
+        run: go mod tidy && git diff --exit-code
+      - name: Go Mod Download
+        run: go mod download        
+      - name: Go Mod Verify
+        run: go mod verify
+      - name: Go Format
+        run: gofmt -s -w . && git diff --exit-code
+      - name: Go Vet
+        run: go vet ./...
+    
