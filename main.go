@@ -21,15 +21,15 @@ func cleanWord(word string) string {
 	// Convert to lowercase first
 	word = strings.ToLower(word)
 
-	// Keep only letters and numbers
-	cleaned := strings.Map(func(r rune) rune {
+	// Keep letters (including unicode letters like umlauts), numbers and combine them
+	var result strings.Builder
+	for _, r := range word {
 		if unicode.IsLetter(r) || unicode.IsNumber(r) {
-			return r
+			result.WriteRune(r)
 		}
-		return -1
-	}, word)
+	}
 
-	return cleaned
+	return result.String()
 }
 
 func analyzeFile(filePath string) (*FileStats, error) {
